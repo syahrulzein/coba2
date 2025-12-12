@@ -2,14 +2,13 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import math
-import matplotlib.pyplot as plt
+import plotly.express as px
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, roc_auc_score
 from imblearn.over_sampling import SMOTE 
 from sklearn.metrics import ConfusionMatrixDisplay
-import seaborn as sns
 
 def ml_model():
     df = pd.read_excel('healthcare-dataset-stroke-data.xlsx')
