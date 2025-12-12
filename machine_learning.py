@@ -64,7 +64,6 @@ def ml_model():
         fig = px.histogram(df_long_norm, x="Value", facet_col="Variable", facet_col_wrap=3,
             nbins=40, histnorm="density", color_discrete_sequence=["gray"], opacity=0.7)
         fig.update_layout(height=400 * math.ceil(len(numbers) / 3), showlegend=False)
-        fig.update_traces(kernel_density="normal")
         st.plotly_chart(fig, use_container_width=True)  
             
     #7. Correlation Heatmap untuk melihat korelasi linear antara kolom-kolom numerik
@@ -208,7 +207,7 @@ def ml_model():
         fig.update_layout(title="Confusion Matrix", xaxis_title="Predicted Label",
             yaxis_title="Actual Label", height=400)
         st.plotly_chart(fig, use_container_width=True)
-        
+
     with col2:
         col1, col2 = st.columns(2)
         with col1:
