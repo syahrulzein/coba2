@@ -1,6 +1,4 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
 
 st.header('Stroke Risk Analysis and Prediction')
 st.write('**Pelatihan Data Science 1.0** - Universitas Muhammadiyah Semarang')
