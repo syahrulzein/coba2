@@ -51,40 +51,33 @@ def ml_model():
     col1, col2 = st.columns(2)
     with col1:
     #6.a Visualisasi dengan Density Plot
-        st.write('**Sebelum Normalisasi**')
-        rows = 3
-        cols = math.ceil(len(numbers) / rows)
-        plt.figure(figsize=(9, 4 * rows))
-        for i, col in enumerate(numbers):
-            plt.subplot(rows, cols, i + 1)
-            sns.distplot(df[col], kde=True, color='gray')
-            plt.title(col)
-        plt.tight_layout()
-        st.pyplot(plt)
+        df_long = df[numbers].melt(var_name="Variable", value_name="Value")
+        fig = px.histogram(
+            df_long, x="Value", color="Variable", facet_row="Variable", nbins=40,
+            opacity=0.7, marginal="box", histnorm="density")
+        fig.update_layout(height=300 * len(numbers), showlegend=False)
+        st.plotly_chart(fig, use_container_width=True)
 
     with col2:
     #6.b Visualisasi dengan Density Plot
-        st.write('**Setelah Normalisasi**')
-        rows = 3
-        cols = math.ceil(len(numbers) / rows)
-        plt.figure(figsize=(9, 4 * rows))
-        for i, col in enumerate(numbers):
-            plt.subplot(rows, cols, i + 1)
-            sns.distplot(df_select[col], kde=True, color='gray')
-            plt.title(col)
-        plt.tight_layout()
-        st.pyplot(plt)   
-    
+        df_long_norm = df_select[numbers].melt(var_name="Variable", value_name="Value")
+        fig = px.histogram(df_long_norm, x="Value", facet_col="Variable", facet_col_wrap=3,
+            nbins=40, histnorm="density", color_discrete_sequence=["gray"], opacity=0.7)
+        fig.update_layout(height=400 * math.ceil(len(numbers) / 3), showlegend=False)
+        fig.update_traces(kernel_density="normal")
+        st.plotly_chart(fig, use_container_width=True)  
+            
     #7. Correlation Heatmap untuk melihat korelasi linear antara kolom-kolom numerik
     st.write('### 3. Korelasi Linear antar Kolom Numerik')
     col1, col2 = st.columns(2)
     with col1:
     #7.a Correlation Heatmap
-        st.write('**Correlation Heatmap**')
-        plt.figure(figsize=(5,5))
-        sns.heatmap(df[numbers].corr(), cmap='Blues', annot=True, fmt='.2f', annot_kws={"size": 8})
-        st.pyplot(plt)
-    
+        corr = df[numbers].corr().round(2)
+        fig = px.imshow(corr, text_auto=True, aspect="auto", color_continuous_scale="Blues")
+
+        fig.update_layout(height=500, margin=dict(l=40, r=40, t=40, b=40))
+        st.plotly_chart(fig, use_container_width=True)
+            
     with col2:
     #7.b Deskripsi Correlation Heatmap
         st.write('**Deskripsi Correlation Heatmap**')
@@ -208,9 +201,14 @@ def ml_model():
     col1, col2 = st.columns([2,2])
     with col1:
         cm = confusion_matrix(y_test, y_pred)
-        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
-        disp.plot(cmap=plt.cm.Blues)
-        st.pyplot(plt)
+        labels = model.classes_
+        cm_df = pd.DataFrame(cm, index=labels, columns=labels)
+        fig = px.imshow(cm_df, text_auto=True, color_continuous_scale="Blues",
+            aspect="auto", labels=dict(x="Predicted", y="Actual"))
+        fig.update_layout(title="Confusion Matrix", xaxis_title="Predicted Label",
+            yaxis_title="Actual Label", height=400)
+        st.plotly_chart(fig, use_container_width=True)
+        
     with col2:
         col1, col2 = st.columns(2)
         with col1:
