@@ -20,9 +20,7 @@ with tab2:
     import visualisasi
     visualisasi.chart()
 
-with tab3:
-    import machine_learning
-    machine_learning.ml_model()
+
 
 with tab4:
     import prediction
